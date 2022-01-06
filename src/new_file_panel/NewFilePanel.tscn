@@ -1,0 +1,95 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/new_file_panel/new_file_panel.gd" type="Script" id=1]
+
+[node name="NewFilePanel" type="Panel"]
+margin_right = 256.0
+margin_bottom = 171.0
+rect_min_size = Vector2( 190, 120 )
+rect_clip_content = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -95.5
+margin_top = -61.5
+margin_right = 95.5
+margin_bottom = 61.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+margin_right = 191.0
+margin_bottom = 14.0
+text = "New File"
+align = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 18.0
+margin_right = 191.0
+margin_bottom = 42.0
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_top = 5.0
+margin_right = 42.0
+margin_bottom = 19.0
+text = "Width "
+
+[node name="widthSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer"]
+margin_left = 46.0
+margin_right = 191.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 400.0
+value = 16.0
+suffix = "px"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 46.0
+margin_right = 191.0
+margin_bottom = 70.0
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2"]
+margin_top = 5.0
+margin_right = 42.0
+margin_bottom = 19.0
+text = "Height"
+
+[node name="heightSpinBox2" type="SpinBox" parent="VBoxContainer/HBoxContainer2"]
+margin_left = 46.0
+margin_right = 191.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 400.0
+value = 16.0
+suffix = "px"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 74.0
+margin_right = 191.0
+margin_bottom = 94.0
+
+[node name="OKButton" type="Button" parent="VBoxContainer/HBoxContainer3"]
+margin_right = 93.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "OK"
+
+[node name="CancelButton" type="Button" parent="VBoxContainer/HBoxContainer3"]
+margin_left = 97.0
+margin_right = 191.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Cancel"
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/OKButton" to="." method="_on_OKButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/CancelButton" to="." method="_on_CancelButton_pressed"]

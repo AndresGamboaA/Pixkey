@@ -1,0 +1,775 @@
+[gd_scene load_steps=21 format=2]
+
+[ext_resource path="res://src/canvas/canvas.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/app/app.gd" type="Script" id=2]
+[ext_resource path="res://src/app/Viewport.gd" type="Script" id=3]
+[ext_resource path="res://assets/graphics/selector.png" type="Texture" id=4]
+[ext_resource path="res://src/app/Selector.gd" type="Script" id=5]
+[ext_resource path="res://src/color_selector/ColorSelector.tscn" type="PackedScene" id=6]
+[ext_resource path="res://assets/graphics/selector_border.png" type="Texture" id=7]
+[ext_resource path="res://src/grid/grid.tscn" type="PackedScene" id=8]
+[ext_resource path="res://src/app/color_picker_panel.gd" type="Script" id=9]
+[ext_resource path="res://src/top_menu/top_menu.tscn" type="PackedScene" id=10]
+[ext_resource path="res://src/app/loadpalletedialog.gd" type="Script" id=11]
+[ext_resource path="res://src/new_file_panel/NewFilePanel.tscn" type="PackedScene" id=12]
+[ext_resource path="res://src/tiled_background/tiled_background.tscn" type="PackedScene" id=13]
+[ext_resource path="res://src/app/OpenFileDialog.gd" type="Script" id=14]
+[ext_resource path="res://assets/themes/dark.tres" type="Theme" id=15]
+[ext_resource path="res://src/app/SaveFileDialog.gd" type="Script" id=16]
+[ext_resource path="res://src/about_panel/about_panel.tscn" type="PackedScene" id=17]
+[ext_resource path="res://src/app/ReferencePanel.gd" type="Script" id=18]
+
+[sub_resource type="ViewportTexture" id=1]
+viewport_path = NodePath("CanvasViewport")
+
+[sub_resource type="StyleBoxFlat" id=2]
+content_margin_left = 6.0
+content_margin_right = 6.0
+content_margin_top = 2.0
+content_margin_bottom = 2.0
+bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="App" type="Node"]
+script = ExtResource( 2 )
+canvas_width = 16
+canvas_height = 16
+
+[node name="CanvasViewport" type="Viewport" parent="."]
+size = Vector2( 8, 8 )
+transparent_bg = true
+handle_input_locally = false
+disable_3d = true
+usage = 0
+render_target_v_flip = true
+render_target_update_mode = 3
+
+[node name="Canvas" parent="CanvasViewport" instance=ExtResource( 1 )]
+
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TopMenu" parent="Control/VBoxContainer" instance=ExtResource( 10 )]
+margin_right = 1024.0
+
+[node name="ViewportContainer" type="ViewportContainer" parent="Control/VBoxContainer"]
+margin_top = 34.0
+margin_right = 1024.0
+margin_bottom = 556.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="Control/VBoxContainer/ViewportContainer"]
+size = Vector2( 1024, 522 )
+size_override_stretch = true
+handle_input_locally = false
+disable_3d = true
+usage = 0
+render_target_update_mode = 3
+script = ExtResource( 3 )
+
+[node name="TiledBackground" parent="Control/VBoxContainer/ViewportContainer/Viewport" instance=ExtResource( 13 )]
+scale = Vector2( 2, 2 )
+
+[node name="Node" type="Node2D" parent="Control/VBoxContainer/ViewportContainer/Viewport"]
+
+[node name="CanvasViewportTexture" type="Sprite" parent="Control/VBoxContainer/ViewportContainer/Viewport/Node"]
+scale = Vector2( 2, 2 )
+texture = SubResource( 1 )
+centered = false
+
+[node name="Grid" parent="Control/VBoxContainer/ViewportContainer/Viewport" instance=ExtResource( 8 )]
+visible = false
+scale = Vector2( 2, 2 )
+z_index = 1
+
+[node name="Selector" type="Node2D" parent="Control/VBoxContainer/ViewportContainer/Viewport"]
+script = ExtResource( 5 )
+
+[node name="Sprite" type="Sprite" parent="Control/VBoxContainer/ViewportContainer/Viewport/Selector"]
+position = Vector2( 1, 1 )
+scale = Vector2( 0.2, 0.2 )
+z_index = 1
+texture = ExtResource( 4 )
+
+[node name="Sprite2" type="Sprite" parent="Control/VBoxContainer/ViewportContainer/Viewport/Selector"]
+position = Vector2( 1, 1 )
+scale = Vector2( 0.2, 0.2 )
+z_index = 1
+texture = ExtResource( 7 )
+
+[node name="WaitToMoveTimer" type="Timer" parent="Control/VBoxContainer/ViewportContainer/Viewport/Selector"]
+wait_time = 0.5
+one_shot = true
+
+[node name="MoveEveryXTimer" type="Timer" parent="Control/VBoxContainer/ViewportContainer/Viewport/Selector"]
+wait_time = 0.05
+one_shot = true
+
+[node name="Camera2D" type="Camera2D" parent="Control/VBoxContainer/ViewportContainer/Viewport"]
+current = true
+zoom = Vector2( 0.15, 0.15 )
+editor_draw_limits = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer"]
+margin_top = 560.0
+margin_right = 1024.0
+margin_bottom = 600.0
+rect_min_size = Vector2( 0, 40 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer2" type="MarginContainer" parent="Control/VBoxContainer/HBoxContainer"]
+margin_right = 10.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 10, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/VBoxContainer/HBoxContainer"]
+margin_left = 14.0
+margin_top = 13.0
+margin_right = 45.0
+margin_bottom = 27.0
+text = "Pixel"
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/VBoxContainer/HBoxContainer"]
+margin_left = 49.0
+margin_right = 59.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 10, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PosLabel" type="Label" parent="Control/VBoxContainer/HBoxContainer"]
+margin_left = 63.0
+margin_top = 13.0
+margin_right = 94.0
+margin_bottom = 27.0
+text = "Pos: "
+
+[node name="MarginContainer3" type="MarginContainer" parent="Control/VBoxContainer/HBoxContainer"]
+margin_left = 98.0
+margin_right = 108.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 10, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SizeLabel" type="Label" parent="Control/VBoxContainer/HBoxContainer"]
+margin_left = 112.0
+margin_top = 13.0
+margin_right = 138.0
+margin_bottom = 27.0
+text = "Size"
+
+[node name="MarginContainer4" type="MarginContainer" parent="Control/VBoxContainer/HBoxContainer"]
+margin_left = 142.0
+margin_right = 152.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 10, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="QuickStepsLabel" type="Label" parent="Control/VBoxContainer/HBoxContainer"]
+margin_left = 156.0
+margin_top = 13.0
+margin_right = 164.0
+margin_bottom = 27.0
+text = "2"
+
+[node name="ColorSelector" parent="Control" instance=ExtResource( 6 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -39.0
+margin_top = 32.0
+margin_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 40, 40 )
+
+[node name="ColorPickerPanel" type="Panel" parent="Control"]
+visible = false
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -316.0
+rect_clip_content = true
+size_flags_vertical = 3
+script = ExtResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Control/ColorPickerPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorPicker" type="ColorPicker" parent="Control/ColorPickerPanel/ScrollContainer"]
+margin_right = 301.0
+margin_bottom = 462.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Dialogs" type="Control" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme = ExtResource( 15 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LoadPalleteDialog" type="FileDialog" parent="Control/Dialogs"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -157.5
+margin_top = -127.5
+margin_right = 157.5
+margin_bottom = 127.5
+rect_min_size = Vector2( 150, 52.5 )
+window_title = "Open a File"
+resizable = true
+mode = 0
+access = 2
+current_dir = "/home/andres/Programs/Godot/Projects/KeyboardPixelart"
+current_path = "/home/andres/Programs/Godot/Projects/KeyboardPixelart/"
+script = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NewFilePanel" parent="Control/Dialogs" instance=ExtResource( 12 )]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -118.5
+margin_top = -88.0
+margin_right = 118.5
+margin_bottom = 88.0
+
+[node name="OpenFileDialog" type="FileDialog" parent="Control/Dialogs"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -157.0
+margin_top = -108.0
+margin_right = 158.0
+margin_bottom = 125.0
+rect_min_size = Vector2( 150, 52.5 )
+window_title = "Open a File"
+resizable = true
+mode = 0
+access = 2
+current_dir = "/home/andres/Programs/Godot/Projects/KeyboardPixelart"
+current_path = "/home/andres/Programs/Godot/Projects/KeyboardPixelart/"
+script = ExtResource( 14 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SaveFileDialog" type="FileDialog" parent="Control/Dialogs"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -157.0
+margin_top = -108.0
+margin_right = 158.0
+margin_bottom = 125.0
+rect_min_size = Vector2( 150, 52.5 )
+resizable = true
+access = 2
+current_dir = "/home/andres/Programs/Godot/Projects/KeyboardPixelart"
+current_path = "/home/andres/Programs/Godot/Projects/KeyboardPixelart/"
+script = ExtResource( 16 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AboutPanel" parent="Control/Dialogs" instance=ExtResource( 17 )]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -149.0
+margin_top = -105.5
+margin_right = 149.0
+margin_bottom = 105.5
+
+[node name="ReferencePanel" type="Panel" parent="Control/Dialogs"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 18 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Dialogs/ReferencePanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer"]
+margin_right = 1024.0
+margin_bottom = 544.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 1004.0
+margin_bottom = 524.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer"]
+margin_right = 984.0
+margin_bottom = 632.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_right = 972.0
+margin_bottom = 24.0
+text = "Pixkey Reference"
+align = 1
+
+[node name="Label2" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 28.0
+margin_right = 972.0
+margin_bottom = 52.0
+text = "Navigation"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 56.0
+margin_right = 972.0
+margin_bottom = 84.0
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_right = 21.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/normal = SubResource( 2 )
+text = "h"
+align = 1
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_left = 25.0
+margin_top = 2.0
+margin_right = 141.0
+margin_bottom = 26.0
+text = "move cursor left"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 88.0
+margin_right = 972.0
+margin_bottom = 116.0
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+margin_right = 20.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/normal = SubResource( 2 )
+text = "j"
+align = 1
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 24.0
+margin_top = 2.0
+margin_right = 155.0
+margin_bottom = 26.0
+text = "move cursor down"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 120.0
+margin_right = 972.0
+margin_bottom = 148.0
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer3"]
+margin_right = 20.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/normal = SubResource( 2 )
+text = "k"
+align = 1
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer3"]
+margin_left = 24.0
+margin_top = 2.0
+margin_right = 134.0
+margin_bottom = 26.0
+text = "move cursor up"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 152.0
+margin_right = 972.0
+margin_bottom = 180.0
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer4"]
+margin_right = 20.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/normal = SubResource( 2 )
+text = "l"
+align = 1
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer4"]
+margin_left = 24.0
+margin_top = 2.0
+margin_right = 140.0
+margin_bottom = 26.0
+text = "move cursor left"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label6" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 184.0
+margin_right = 972.0
+margin_bottom = 208.0
+text = "Arrow keys can also be used."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer3" type="MarginContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 212.0
+margin_right = 972.0
+margin_bottom = 232.0
+rect_min_size = Vector2( 0, 20 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 236.0
+margin_right = 972.0
+margin_bottom = 264.0
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer5"]
+margin_right = 46.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/normal = SubResource( 2 )
+text = "Shift"
+align = 1
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer5"]
+margin_left = 50.0
+margin_top = 2.0
+margin_right = 705.0
+margin_bottom = 26.0
+text = "Keep this key pressed while navigating to move the cursor x amount of pixels (2 by default)."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 268.0
+margin_right = 972.0
+margin_bottom = 296.0
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer6"]
+margin_right = 34.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/normal = SubResource( 2 )
+text = "2-9"
+align = 1
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer6"]
+margin_left = 38.0
+margin_top = 2.0
+margin_right = 418.0
+margin_bottom = 26.0
+text = "Set amount of pixels to move when \"Shift' is pressed."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label4" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 300.0
+margin_right = 972.0
+margin_bottom = 324.0
+autowrap = true
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 328.0
+margin_right = 972.0
+margin_bottom = 352.0
+text = "Painting"
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 356.0
+margin_right = 972.0
+margin_bottom = 384.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer7"]
+margin_right = 57.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/normal = SubResource( 2 )
+text = "Space"
+align = 1
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer7"]
+margin_left = 61.0
+margin_top = 2.0
+margin_right = 372.0
+margin_bottom = 26.0
+text = "Paint a pixel with the current selected color."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 388.0
+margin_right = 972.0
+margin_bottom = 416.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer8"]
+margin_right = 20.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/normal = SubResource( 2 )
+text = "f"
+align = 1
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer8"]
+margin_left = 24.0
+margin_top = 2.0
+margin_right = 104.0
+margin_bottom = 26.0
+text = "Bucket tool"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 420.0
+margin_right = 972.0
+margin_bottom = 448.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer9"]
+margin_right = 20.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/normal = SubResource( 2 )
+text = "y"
+align = 1
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer9"]
+margin_left = 24.0
+margin_top = 2.0
+margin_right = 259.0
+margin_bottom = 26.0
+text = "Select the color under the cursor."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 452.0
+margin_right = 972.0
+margin_bottom = 480.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer10"]
+margin_right = 20.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/normal = SubResource( 2 )
+text = "c"
+align = 1
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer10"]
+margin_left = 24.0
+margin_top = 2.0
+margin_right = 154.0
+margin_bottom = 26.0
+text = "Show color picker."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer11" type="HBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 484.0
+margin_right = 972.0
+margin_bottom = 512.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer11"]
+margin_right = 36.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/normal = SubResource( 2 )
+text = "Ctrl"
+align = 1
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer11"]
+margin_left = 40.0
+margin_top = 2.0
+margin_right = 391.0
+margin_bottom = 26.0
+text = "Show color pallete. Use 'j' and 'k' to select a color."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer13" type="HBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 516.0
+margin_right = 972.0
+margin_bottom = 544.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer13"]
+margin_right = 21.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/normal = SubResource( 2 )
+text = "g"
+align = 1
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer13"]
+margin_left = 25.0
+margin_top = 2.0
+margin_right = 96.0
+margin_bottom = 26.0
+text = "Show grid"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label7" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 548.0
+margin_right = 972.0
+margin_bottom = 572.0
+
+[node name="Label5" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 576.0
+margin_right = 972.0
+margin_bottom = 600.0
+text = "Save"
+
+[node name="HBoxContainer12" type="HBoxContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 604.0
+margin_right = 972.0
+margin_bottom = 632.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer12"]
+margin_right = 20.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/normal = SubResource( 2 )
+text = "s"
+align = 1
+
+[node name="Label3" type="Label" parent="Control/Dialogs/ReferencePanel/VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer12"]
+margin_left = 24.0
+margin_top = 2.0
+margin_right = 60.0
+margin_bottom = 26.0
+text = "Save"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer"]
+margin_top = 548.0
+margin_right = 1024.0
+margin_bottom = 576.0
+
+[node name="Button" type="Button" parent="Control/Dialogs/ReferencePanel/VBoxContainer/CenterContainer"]
+margin_left = 488.0
+margin_right = 536.0
+margin_bottom = 28.0
+text = "Close"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer2" type="MarginContainer" parent="Control/Dialogs/ReferencePanel/VBoxContainer"]
+margin_top = 580.0
+margin_right = 1024.0
+margin_bottom = 600.0
+rect_min_size = Vector2( 0, 20 )
+
+[connection signal="timeout" from="Control/VBoxContainer/ViewportContainer/Viewport/Selector/WaitToMoveTimer" to="Control/VBoxContainer/ViewportContainer/Viewport/Selector" method="_on_WaitToMoveTimer_timeout"]
+[connection signal="timeout" from="Control/VBoxContainer/ViewportContainer/Viewport/Selector/MoveEveryXTimer" to="Control/VBoxContainer/ViewportContainer/Viewport/Selector" method="_on_MoveEveryXTimer_timeout"]
+[connection signal="color_changed" from="Control/ColorPickerPanel/ScrollContainer/ColorPicker" to="Control/ColorPickerPanel" method="_on_ColorPicker_color_changed"]
+[connection signal="preset_added" from="Control/ColorPickerPanel/ScrollContainer/ColorPicker" to="Control/ColorPickerPanel" method="_on_ColorPicker_preset_added"]
+[connection signal="preset_removed" from="Control/ColorPickerPanel/ScrollContainer/ColorPicker" to="Control/ColorPickerPanel" method="_on_ColorPicker_preset_removed"]
+[connection signal="confirmed" from="Control/Dialogs/LoadPalleteDialog" to="Control/Dialogs/LoadPalleteDialog" method="_on_LoadPalleteDialog_confirmed"]
+[connection signal="confirmed" from="Control/Dialogs/OpenFileDialog" to="Control/Dialogs/OpenFileDialog" method="_on_OpenFileDialog_confirmed"]
+[connection signal="confirmed" from="Control/Dialogs/SaveFileDialog" to="Control/Dialogs/SaveFileDialog" method="_on_SaveFileDialog_confirmed"]
+[connection signal="pressed" from="Control/Dialogs/ReferencePanel/VBoxContainer/CenterContainer/Button" to="Control/Dialogs/ReferencePanel" method="_on_Button_pressed"]
