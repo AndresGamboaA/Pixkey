@@ -4,10 +4,9 @@ extends FileDialog
 func _ready():
 	add_filter("*.png ; PNG Images")
 
-
-func _on_OpenFileDialog_confirmed():
+func open_file(path):
 	var img = Image.new()
-	img.load(current_path)
+	img.load(path)
 	var size = Vector2(img.get_width(), img.get_height())
 	Global.canvas.layers.get_child(0).queue_free()
 	Global.grid.size = size
@@ -36,3 +35,10 @@ func _on_OpenFileDialog_confirmed():
 		for r in range(size.y):
 			Tools.current_layer.pixels[r][c] = img.get_pixel(c, r)
 	img.unlock()
+
+func _on_OpenFileDialog_confirmed():
+	open_file(current_path)
+
+
+func _on_OpenFileDialog_file_selected(path):
+	open_file(path)

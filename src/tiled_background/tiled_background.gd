@@ -9,13 +9,10 @@ func initialize(value):
 	update()
 
 func _draw():
-	print("updating tiel " + str(size))
-	var c_count = 0
-	var r_count = 0
+
 	var color1 = Color(0.752941,0.752941,0.752941,1)
 	var color2 = Color(0.501961,0.501961,0.501961,1)
 	var color = color1
-	var flag = false
 	for c in range(size.x):
 		for r in range(size.y):
 			var pos = Vector2(c, r)

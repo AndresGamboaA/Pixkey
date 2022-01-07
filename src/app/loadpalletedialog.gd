@@ -11,16 +11,19 @@ func _ready():
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
-
-func _on_LoadPalleteDialog_confirmed():
+func load_pallete():
 	print("loading " + current_path)
 	var pallete = Image.new()
-	pallete.load(current_file)
+	pallete.load(current_path)
 	pallete.lock()
 	for i in range(pallete.get_width()):
 		Global.color_selector.add_color(pallete.get_pixel(i,0))
 	pallete.unlock()
+
+
+func _on_LoadPalleteDialog_confirmed():
+	load_pallete()
+
+
+func _on_LoadPalleteDialog_file_selected(path):
+	load_pallete()
